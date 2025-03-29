@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                                   xmlns:app="http://schemas.android.com/apk/res-auto"
+                                                   xmlns:tools="http://schemas.android.com/tools"
+                                                   android:layout_width="match_parent"
+                                                   android:layout_height="match_parent" android:visibility="visible">
+    <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="0dp"
+            android:layout_height="45dp"
+            app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0" app:layout_constraintTop_toBottomOf="@id/setting_title_line"
+            android:id="@+id/request_setting_line" app:layout_constraintBottom_toTopOf="@+id/argument_pairs"
+            android:visibility="visible" tools:visibility="visible">
+        <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:inputType="text"
+                android:text="URL"
+                android:ems="10"
+                android:id="@+id/request_url" android:layout_weight="1" tools:ignore="TouchTargetSizeCheck"
+        />
+        <EditText
+                android:layout_width="@dimen/cardview_default_elevation"
+                android:layout_height="match_parent"
+                android:inputType="text"
+                android:text="method"
+                android:ems="10"
+                android:id="@+id/request_method" android:layout_weight="1" tools:ignore="TouchTargetSizeCheck"
+                android:autoText="false"/>
+    </LinearLayout>
+    <Button
+            android:text="保存设置"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content" android:id="@+id/save_setting"
+            app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:visibility="visible"
+            android:visibility="visible" app:layout_constraintHorizontal_bias="0.0"/>
+    <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@+id/save_setting" app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:id="@+id/recyclerView" app:layout_constraintHorizontal_bias="0.0"/>
+    <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@+id/save_setting" app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" android:id="@+id/argument_pairs"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintTop_toBottomOf="@id/request_setting_line"/>
+    <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent"
+            android:id="@+id/setting_title_line"
+            app:layout_constraintBottom_toTopOf="@+id/request_setting_line" tools:visibility="visible"
+            android:visibility="visible" app:layout_constraintTop_toTopOf="parent">
+        <Button
+                android:text="使用默认设置"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" android:id="@+id/use_default_setting" android:layout_weight="1"
+                tools:ignore="TouchTargetSizeCheck"/>
+        <TextView
+                android:text="系统参数设置"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent" android:id="@+id/setting_title" android:layout_weight="1"
+                android:textSize="24sp"/>
+        <Button
+                android:text="+"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" android:id="@+id/add_customized_argument"
+                android:layout_weight="1" tools:ignore="TouchTargetSizeCheck"/>
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
