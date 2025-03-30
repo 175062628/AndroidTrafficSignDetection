@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.MotionEvent
 import android.widget.Button
 import android.widget.EditText
+import android.widget.Switch
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.fillMaxSize
@@ -56,15 +57,17 @@ class SettingActivity : BaseActivity() {
         }
         findViewById<Button>(R.id.use_default_setting).setOnClickListener {
             adapter.clear()
-            findViewById<EditText>(R.id.request_url).setText(SettingParams.DEFAULTURL)
-            findViewById<EditText>(R.id.request_method).setText(SettingParams.DEFAULTMETHOD)
+            findViewById<EditText>(R.id.request_url).setText(SettingParams.DEFAULT_URL)
+            findViewById<EditText>(R.id.frame_interval_value).setText(SettingParams.DEFAULT_FRAME_INTERVAL.toString())
+            findViewById<Switch>(R.id.compress_local_value).isChecked = SettingParams.DEFAULT_COMPRESS
             for(argument in SettingParams.Default_ArgumentList) {
                 adapter.addItem(argument.key, argument.value)
             }
             saveSetting()
         }
         findViewById<EditText>(R.id.request_url).setText(SettingParams.retrieveURL())
-        findViewById<EditText>(R.id.request_method).setText(SettingParams.retrieveMETHOD())
+        findViewById<EditText>(R.id.frame_interval_value).setText(SettingParams.retrieveFrameInterval().toString())
+        findViewById<Switch>(R.id.compress_local_value).isChecked = SettingParams.retrieveCompress()
         if(SettingParams.detectionMap.getMap().isEmpty()){
             findViewById<Button>(R.id.use_default_setting).performClick()
             saveSetting()
@@ -76,10 +79,9 @@ class SettingActivity : BaseActivity() {
     private fun saveSetting(){
         SettingParams.detectionMap.setMap(adapter.getArgumentSetting())
         SettingParams.updateURL(
-            SettingParams.empty2Default(findViewById<EditText>(R.id.request_url).text.toString(), SettingParams.DEFAULTURL) as String
+            SettingParams.empty2Default(findViewById<EditText>(R.id.request_url).text.toString(), SettingParams.DEFAULT_URL) as String
         )
-        SettingParams.updateMethod(
-            SettingParams.empty2Default(findViewById<EditText>(R.id.request_method).text.toString(), SettingParams.DEFAULTMETHOD) as String
-        )
+        SettingParams.updateFrameInterval(findViewById<EditText>(R.id.frame_interval_value).text.toString().trim().toFloat())
+        SettingParams.updateCompress(findViewById<Switch>(R.id.compress_local_value).isChecked)
     }
 }

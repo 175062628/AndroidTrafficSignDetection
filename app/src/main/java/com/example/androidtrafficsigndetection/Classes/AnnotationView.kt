@@ -11,6 +11,9 @@ import android.view.ViewGroup
 import com.example.androidtrafficsigndetection.DataModel.DetectionResult
 import com.example.androidtrafficsigndetection.DataModel.SettingParams
 import kotlin.collections.mutableListOf
+import kotlin.div
+import kotlin.text.toFloat
+import kotlin.times
 
 class AnnotationView private constructor(context: Context) : View(context) {
     companion object : SingletonHolder<AnnotationView, Context>(::AnnotationView) {
@@ -64,6 +67,35 @@ class AnnotationView private constructor(context: Context) : View(context) {
             drawBoundingBox(canvas, result)
             drawLabel(canvas, result)
         }
+    }
+    fun screenConvert(detectionResult: MutableList<DetectionResult>, width: Int, height: Int): MutableList<DetectionResult> {
+        // 获取屏幕实际宽高
+        val screenWidth = resources.displayMetrics.widthPixels.toFloat()
+        val screenHeight = resources.displayMetrics.heightPixels.toFloat()
+
+        val stretchedWidth = width * (screenHeight.toFloat() / height)
+        val cropHorizontal = (stretchedWidth - screenWidth) / 2
+
+        detectionResult.forEach { detection ->
+            // 创建可修改的坐标副本
+            val revised_xyxy = detection.xyxy.toMutableList().apply {
+                // 遍历x1,y1,x2,y2坐标
+                indices.forEach { i ->
+                    when (i % 2) {
+                        0 -> {  // X方向处理（宽度映射）
+                            val stretchedX = this[i] * stretchedWidth
+                            val screenX = stretchedX - cropHorizontal
+                            this[i] = (screenX / screenWidth).coerceIn(0f, 1f)
+                        }
+                        1 -> {  // Y方向保持原值（高度已占满）
+                            this[i] = this[i]  // 显式保持原值
+                        }
+                    }
+                }
+            }
+            detection.xyxy = revised_xyxy
+        }
+        return detectionResult
     }
 
     private fun drawBoundingBox(canvas: Canvas, result: DetectionResult) {

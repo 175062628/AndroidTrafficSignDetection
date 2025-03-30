@@ -5,13 +5,18 @@ import android.os.Bundle
 import android.util.Log
 import android.util.Size
 import android.view.MotionEvent
+import android.view.Surface.ROTATION_0
+import android.view.Surface.ROTATION_90
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.camera.core.AspectRatio
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageProxy
 import androidx.camera.core.Preview
+import androidx.camera.core.resolutionselector.AspectRatioStrategy
+import androidx.camera.core.resolutionselector.ResolutionSelector
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
 import androidx.core.content.ContextCompat
@@ -76,8 +81,18 @@ class CameraActivity : AppCompatActivity() {
             // 用于绑定生命周期的相机提供者
             val cameraProvider: ProcessCameraProvider = cameraProviderFuture.get()
 
-            // 预览用例
+            val aspectRatioStrategy = AspectRatioStrategy(
+                AspectRatio.RATIO_4_3,
+                AspectRatioStrategy.FALLBACK_RULE_AUTO
+            )
+
             val preview = Preview.Builder()
+                .setResolutionSelector(
+                    ResolutionSelector.Builder()
+                        .setAspectRatioStrategy(aspectRatioStrategy)
+                        .build()
+                )
+                .setTargetRotation(ROTATION_0)
                 .build()
                 .also {
                     it.setSurfaceProvider(viewFinder.surfaceProvider)
@@ -85,7 +100,11 @@ class CameraActivity : AppCompatActivity() {
 
             // 图像分析用例
             val imageAnalysis = ImageAnalysis.Builder()
-                .setTargetResolution(Size(640, 480))
+                .setResolutionSelector(
+                    ResolutionSelector.Builder()
+                        .setAspectRatioStrategy(aspectRatioStrategy)
+                        .build()
+                )
                 .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
                 .build()
                 .also {
@@ -130,13 +149,13 @@ class CameraActivity : AppCompatActivity() {
     inner class ImageAnalyzer : ImageAnalysis.Analyzer {
         override fun analyze(image: ImageProxy) {
             val currentTime = System.currentTimeMillis()
-            if (currentTime - lastAnalysisTime < 1000 / SettingParams.FRAME_INTERVAL) {
+            if (currentTime - lastAnalysisTime < 1000 / SettingParams.retrieveFrameInterval()) {
                 image.close()
                 return
             }
             lastAnalysisTime = currentTime
             if(HttpDetection.reachable == true) {
-                HttpDetection.uploadImage(image, SettingParams.COMPRESS, annotationView)
+                HttpDetection.uploadImage(image, SettingParams.retrieveCompress(), annotationView)
             }
             image.close()
         }

@@ -16,7 +16,6 @@ import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import okio.ByteString
-import org.json.JSONArray
 import java.io.ByteArrayOutputStream
 import java.io.IOException
 import java.nio.ByteBuffer
@@ -53,7 +52,7 @@ object HttpDetection {
             override fun onResponse(call: Call, response: Response) {
                 try {
                     val detectionResponse = gson.fromJson(response.body?.string(), DetectionResponse::class.java)
-                    annotationView.updateDetections(detectionResponse.results as MutableList<DetectionResult>)
+                    annotationView.updateDetections(annotationView.screenConvert(detectionResponse.results as MutableList<DetectionResult>, detectionResponse.width, detectionResponse.height))
                 } catch (e: Exception) {
 
                 } finally {

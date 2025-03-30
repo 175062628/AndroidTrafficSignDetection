@@ -4,31 +4,27 @@ import android.app.Application
 import com.example.androidtrafficsigndetection.Classes.DetectionMap
 
 object SettingParams {
-    const val DEFAULTURL = "http://10.0.2.2:8080"
-    const val DEFAULTMETHOD = "POST"
+    const val TAB_BAR_PERCENTAGE = 0.45
+    const val SLICE_SETTING = 100
+    const val DOUBLE_CLICK_TIME_DELTA = 300
+    const val BOX_WIDTH = 3f
+
+    const val DEFAULT_URL = "http://10.0.2.2:8080"
     val Default_ArgumentList = mutableListOf(
         ArgumentPair("conf", "0.3"),
         ArgumentPair("iou", "0.6")
     )
-    // 侧滑菜单宽度
-    const val TAB_BAR_PERCENTAGE = 0.45
-    // 侧滑菜单唤起阈值
-    const val SLICE_SETTING = 100
-    // 双击时间间隔
-    const val DOUBLE_CLICK_TIME_DELTA = 300
+    const val DEFAULT_FRAME_INTERVAL = 1f
+    const val DEFAULT_COMPRESS = true
 
-    const val BOX_WIDTH = 3f
-    // 图像识别帧率
-    var FRAME_INTERVAL = 10
-    // 客户端压缩数据
-    var COMPRESS = true
+
     var URL = "";
-    var METHOD = ""
     val detectionMap = DetectionMap()
+    var FRAME_INTERVAL = 1f
+    var COMPRESS = true
 
     fun init() {
-        if(URL == "") URL = DEFAULTURL
-        if(METHOD == "") METHOD = DEFAULTMETHOD
+        if(URL == "") URL = DEFAULT_URL
         if(detectionMap.getMap().isEmpty()) detectionMap.setMap(Default_ArgumentList)
     }
     fun changeMap2List(): MutableList<ArgumentPair>{
@@ -45,20 +41,24 @@ object SettingParams {
 
     fun retrieveURL(): String {
         if (URL == "") {
-            return DEFAULTURL
+            return DEFAULT_URL
         }
         return URL
     }
-    fun retrieveMETHOD(): String {
-        if (METHOD == "") {
-            return DEFAULTMETHOD;
-        }
-        return METHOD;
-    }
-    fun updateMethod(method: String) {
-        METHOD = method
-    }
     fun updateURL(url: String) {
         URL = url
+    }
+    fun retrieveFrameInterval(): Float {
+        if (FRAME_INTERVAL <= 0) return DEFAULT_FRAME_INTERVAL
+        return FRAME_INTERVAL
+    }
+    fun updateFrameInterval(frame_interval: Float) {
+        FRAME_INTERVAL = frame_interval
+    }
+    fun retrieveCompress(): Boolean {
+        return COMPRESS
+    }
+    fun updateCompress(compress: Boolean) {
+        COMPRESS = compress
     }
 }

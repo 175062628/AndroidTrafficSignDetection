@@ -6,7 +6,7 @@ data class DetectionResult(
     @SerializedName("conf")
     val confidence: Float,
     @SerializedName("xyxyn")
-    val xyxy: List<Float>,
+    var xyxy: List<Float>,
     @SerializedName("cls")
     val cls: String
 )

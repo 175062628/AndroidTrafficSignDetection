@@ -8,5 +8,9 @@ data class DetectionResponse(
     @SerializedName("results")
     val results: List<DetectionResult> = emptyList(),
     @SerializedName("status")
-    val status: String
+    val status: String,
+    @SerializedName("width")
+    val width: Int,
+    @SerializedName("height")
+    val height: Int
 )

@@ -5,29 +5,54 @@
                                                    android:layout_width="match_parent"
                                                    android:layout_height="match_parent" android:visibility="visible">
     <LinearLayout
-            android:orientation="horizontal"
+            android:orientation="vertical"
             android:layout_width="0dp"
-            android:layout_height="45dp"
+            android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0" app:layout_constraintTop_toBottomOf="@id/setting_title_line"
             android:id="@+id/request_setting_line" app:layout_constraintBottom_toTopOf="@+id/argument_pairs"
             android:visibility="visible" tools:visibility="visible">
         <EditText
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:inputType="text"
                 android:text="URL"
                 android:ems="10"
                 android:id="@+id/request_url" android:layout_weight="1" tools:ignore="TouchTargetSizeCheck"
         />
-        <EditText
-                android:layout_width="@dimen/cardview_default_elevation"
-                android:layout_height="match_parent"
-                android:inputType="text"
-                android:text="method"
-                android:ems="10"
-                android:id="@+id/request_method" android:layout_weight="1" tools:ignore="TouchTargetSizeCheck"
-                android:autoText="false"/>
+        <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:layout_weight="1" android:id="@+id/frame_interval"
+                android:gravity="center_vertical">
+            <TextView
+                    android:text="帧率"
+                    android:layout_width="241dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" android:id="@+id/frame_interval_key" android:editable="false"
+                    android:textSize="26sp"/>
+            <EditText
+                    android:layout_width="wrap_content"
+                    android:layout_height="48dp"
+                    android:inputType="text"
+                    android:text="10"
+                    android:ems="10"
+                    android:id="@+id/frame_interval_value" android:layout_weight="1"/>
+        </LinearLayout>
+        <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" android:layout_weight="1" android:id="@+id/compress_local">
+            <TextView
+                    android:text="本地压缩"
+                    android:layout_width="wrap_content"
+                    android:layout_height="48dp" android:id="@+id/compress_local_key"
+                    android:layout_weight="1" android:textSize="26sp"/>
+            <Switch
+                    android:layout_width="48dp"
+                    android:layout_height="match_parent" android:id="@+id/compress_local_value"
+                    android:layout_weight="1"/>
+        </LinearLayout>
     </LinearLayout>
     <Button
             android:text="保存设置"
