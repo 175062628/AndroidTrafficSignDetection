@@ -4,19 +4,27 @@ import android.graphics.ImageFormat
 import android.graphics.Rect
 import android.graphics.YuvImage
 import android.media.Image
+import android.net.Uri
 import android.util.Log
+import android.widget.ImageView
 import androidx.camera.core.ImageProxy
 import com.example.androidtrafficsigndetection.DataModel.DetectionResponse
 import com.example.androidtrafficsigndetection.DataModel.DetectionResult
 import com.example.androidtrafficsigndetection.DataModel.SettingParams
+import com.example.androidtrafficsigndetection.R
 import com.google.gson.Gson
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
+import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import okio.ByteString
 import java.io.ByteArrayOutputStream
+import java.io.File
+import java.io.FileOutputStream
 import java.io.IOException
 import java.nio.ByteBuffer
 
@@ -61,6 +69,101 @@ object HttpDetection {
             }
         })
     }
+
+    suspend fun uploadMedia(file: File): File? = withContext(Dispatchers.IO) { // 在 IO 线程执行
+        val client = OkHttpClient()
+        val request = Request.Builder()
+            .url(SettingParams.retrieveURL() + "/api/detectionMedia")
+            .post(
+                MultipartBody.Builder()
+                    .setType(MultipartBody.FORM)
+                    .addFormDataPart(
+                        "image",
+                        file.name,
+                        file.asRequestBody("image/jpeg".toMediaType())
+                    )
+                    .apply {
+                        SettingParams.detectionMap.getMap().forEach { (key, value) ->
+                            addFormDataPart(
+                                key.toString(),
+                                null,
+                                value.toString().toRequestBody("text/plain".toMediaTypeOrNull())
+                            )
+                        }
+                    }
+                    .build()
+            )
+            .build()
+
+        return@withContext try {
+            val response = client.newCall(request).execute() // 仍用同步方法，但在协程的 IO 线程中执行
+            if (response.isSuccessful) {
+                val responseBody = response.body
+                if (responseBody != null) {
+                    val inputStream = responseBody.byteStream()
+                    Log.d("HttpDetection", "res: " + inputStream)
+                    val outputFile = File.createTempFile("response", ".jpg")
+                    FileOutputStream(outputFile).use { outputStream -> // 自动关闭流
+                        inputStream.copyTo(outputStream)
+                    }
+                    outputFile // 返回文件对象
+                } else {
+                    null
+                }
+            } else {
+                null
+            }
+        } catch (e: IOException) {
+            Log.d("HttpDetection", "res: " + e)
+            e.printStackTrace()
+            null
+        }
+    }
+//    fun uploadMedia(file: File): File? {
+//        val client = OkHttpClient()
+//        val request = Request.Builder()
+//            .url(SettingParams.retrieveURL() + "/api/detectionMedia")
+//            .post(
+//                MultipartBody.Builder()
+//                    .setType(MultipartBody.FORM)
+//                    .addFormDataPart(
+//                        "image",
+//                        file.name,
+//                        file.asRequestBody("image/jpeg".toMediaType())
+//                    )
+//                    .apply {
+//                        SettingParams.detectionMap.getMap().forEach { (key, value) ->
+//                            addFormDataPart(
+//                                key.toString(),
+//                                null,
+//                                value.toString()
+//                                    .toRequestBody("text/plain".toMediaTypeOrNull())
+//                            )
+//                        }
+//                    }
+//                    .build()
+//            )
+//            .build()
+//
+//        try {
+//            val response = client.newCall(request).execute()
+//            if (response.isSuccessful) {
+//                val responseBody = response.body
+//                if (responseBody != null) {
+//                    val inputStream = responseBody.byteStream()
+//                    val outputFile = File.createTempFile("response", ".jpg")
+//                    val outputStream = FileOutputStream(outputFile)
+//                    inputStream.copyTo(outputStream)
+//                    outputStream.close()
+//                    inputStream.close()
+//                    return outputFile
+//                }
+//            }
+//        } catch (e: IOException) {
+//            e.printStackTrace()
+//        }
+//        return null
+//    }
 
     private fun processImageProxy(imageProxy: ImageProxy, compress: Boolean): Request {
         val image = imageProxy.image ?: throw IllegalStateException("Invalid ImageProxy")

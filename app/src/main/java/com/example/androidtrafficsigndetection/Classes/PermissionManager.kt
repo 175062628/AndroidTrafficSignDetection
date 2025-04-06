@@ -4,6 +4,7 @@ import android.app.Activity
 import android.app.Application
 import android.content.pm.PackageManager
 import android.os.Build
+import android.util.Log
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 
@@ -11,6 +12,9 @@ object PermissionManager {
     private const val CAMERA_PERMISSION = android.Manifest.permission.CAMERA
     private const val READ_STORAGE_PERMISSION = android.Manifest.permission.READ_EXTERNAL_STORAGE
     private const val WRITE_STORAGE_PERMISSION = android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+    private const val READ_MEDIA_IMAGES = android.Manifest.permission.READ_MEDIA_IMAGES
+    private const val MANAGE_EXTERNAL_STORAGE = android.Manifest.permission.MANAGE_EXTERNAL_STORAGE
+
     const val PERMISSION_REQUEST_CODE = 1001
 
     private var application: Application? = null
@@ -26,13 +30,17 @@ object PermissionManager {
         if (ContextCompat.checkSelfPermission(app, CAMERA_PERMISSION) != PackageManager.PERMISSION_GRANTED) {
             permissionsToRequest.add(CAMERA_PERMISSION)
         }
-
         if (ContextCompat.checkSelfPermission(app, READ_STORAGE_PERMISSION) != PackageManager.PERMISSION_GRANTED) {
             permissionsToRequest.add(READ_STORAGE_PERMISSION)
         }
-
         if (ContextCompat.checkSelfPermission(app, WRITE_STORAGE_PERMISSION) != PackageManager.PERMISSION_GRANTED) {
             permissionsToRequest.add(WRITE_STORAGE_PERMISSION)
+        }
+        if (ContextCompat.checkSelfPermission(app, READ_MEDIA_IMAGES) != PackageManager.PERMISSION_GRANTED) {
+            permissionsToRequest.add(READ_MEDIA_IMAGES)
+        }
+        if (ContextCompat.checkSelfPermission(app, MANAGE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            permissionsToRequest.add(MANAGE_EXTERNAL_STORAGE)
         }
 
         if (permissionsToRequest.isNotEmpty()) {
@@ -49,7 +57,9 @@ object PermissionManager {
         return mapOf(
             CAMERA_PERMISSION to (ContextCompat.checkSelfPermission(app, CAMERA_PERMISSION) == PackageManager.PERMISSION_GRANTED),
             READ_STORAGE_PERMISSION to (ContextCompat.checkSelfPermission(app, READ_STORAGE_PERMISSION) == PackageManager.PERMISSION_GRANTED),
-            WRITE_STORAGE_PERMISSION to (ContextCompat.checkSelfPermission(app, WRITE_STORAGE_PERMISSION) == PackageManager.PERMISSION_GRANTED)
+            WRITE_STORAGE_PERMISSION to (ContextCompat.checkSelfPermission(app, WRITE_STORAGE_PERMISSION) == PackageManager.PERMISSION_GRANTED),
+            READ_MEDIA_IMAGES to (ContextCompat.checkSelfPermission(app, READ_MEDIA_IMAGES) == PackageManager.PERMISSION_GRANTED),
+            MANAGE_EXTERNAL_STORAGE to (ContextCompat.checkSelfPermission(app, MANAGE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED),
         )
     }
 }

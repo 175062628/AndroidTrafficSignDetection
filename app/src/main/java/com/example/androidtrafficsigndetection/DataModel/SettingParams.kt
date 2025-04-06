@@ -8,8 +8,9 @@ object SettingParams {
     const val SLICE_SETTING = 100
     const val DOUBLE_CLICK_TIME_DELTA = 300
     const val BOX_WIDTH = 3f
+    const val DEFAULT_STORAGE_PATH = "TrafficSignDetection"
 
-    const val DEFAULT_URL = "http://10.0.2.2:8080"
+    const val DEFAULT_URL = "http://192.168.0.102:8080"
     val Default_ArgumentList = mutableListOf(
         ArgumentPair("conf", "0.3"),
         ArgumentPair("iou", "0.6")

@@ -25,6 +25,20 @@ class MainActivity : BaseActivity() {
             startActivity(Intent(this, CameraActivity::class.java))
             Toast.makeText(this, "双击以关闭相机", Toast.LENGTH_SHORT).show()
         }
+        homePage.findViewById<Button>(R.id.open_media).setOnClickListener {
+            if(PermissionManager.getPermissionStatus()["READ_STORAGE_PERMISSION"] == false
+                || PermissionManager.getPermissionStatus()["WRITE_STORAGE_PERMISSION"] == false
+                || PermissionManager.getPermissionStatus()["READ_MEDIA_IMAGES"] == false
+                || PermissionManager.getPermissionStatus()["MANAGE_EXTERNAL_STORAGE"] == false) {
+                Toast.makeText(this, "请打开读写权限", Toast.LENGTH_SHORT).show()
+                PermissionManager.requestPermissions(this)
+                return@setOnClickListener
+            }
+            val intent = Intent(this, MediaActivity::class.java)
+            intent.putExtra("MainActivity", "DOUBLE_CLICK")
+            startActivity(intent)
+            Toast.makeText(this, "双击以关闭相册", Toast.LENGTH_SHORT).show()
+        }
         setContentView(homePage)
 
         super.onCreate(savedInstanceState)

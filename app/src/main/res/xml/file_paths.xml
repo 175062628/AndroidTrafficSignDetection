@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths xmlns:android="http://schemas.android.com/apk/res/android">
+    <external-path
+            name="external_dcim"
+            path="DCIM" />
+    <external-path
+            name="external_dcim_camera"
+            path="DCIM/Camera" />
+    <external-path
+            name="external_dcim_screenshots"
+            path="DCIM/Screenshots" />
+    <external-path
+            name="external_dcim_trafficsigndetection"
+            path="DCIM/TrafficSignDetection" />
+    <external-path
+            name="external_dcim"
+            path="DCIM" />
+    <external-path
+            name="external_pictures"
+            path="Pictures" />
+</paths>

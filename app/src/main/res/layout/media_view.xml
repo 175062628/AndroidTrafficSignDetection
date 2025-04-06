@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent" android:orientation="vertical" android:gravity="center"
+              android:id="@+id/media_layout">
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="0dp" tools:srcCompat="@tools:sample/avatars"
+                android:id="@+id/detection_image" app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="@+id/reopen_media"
+                app:layout_constraintBottom_toTopOf="@+id/reopen_media"
+                app:layout_constraintStart_toStartOf="@+id/reopen_media"/>
+        <Button
+                android:text="重新选择相片"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:id="@+id/reopen_media" android:textSize="18sp"
+                android:layout_gravity="bottom" app:layout_constraintTop_toBottomOf="@+id/detection_image"
+                app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

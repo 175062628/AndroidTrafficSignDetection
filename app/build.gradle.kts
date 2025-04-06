@@ -2,6 +2,7 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("org.jetbrains.kotlin.plugin.compose")
+    id("org.jetbrains.kotlin.kapt")
 }
 
 android {
@@ -79,4 +80,6 @@ dependencies {
     implementation("com.squareup.okhttp3:okhttp:4.9.2")
     implementation("io.socket:socket.io-client:2.1.0")
     implementation("com.google.code.gson:gson:2.8.6")
+    implementation("com.github.bumptech.glide:glide:4.13.2")
+    kapt("com.github.bumptech.glide:compiler:4.13.2")
 }

@@ -46,11 +46,12 @@ class AnnotationView private constructor(context: Context) : View(context) {
     // 更新后的外部方法
     fun updateDetections(detectionResult: MutableList<DetectionResult>) {
         post {
+            Log.d("Annotation", "converted result: " + detectionResult)
             if(detections == detectionResult) {
                 return@post
             }
             detections.clear()
-            detections = detectionResult
+            detections.addAll(detectionResult)
             invalidate()
         }
     }
@@ -64,12 +65,14 @@ class AnnotationView private constructor(context: Context) : View(context) {
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         detections.forEach { result ->
+            Log.d("Annotation", "result: " + result)
             drawBoundingBox(canvas, result)
             drawLabel(canvas, result)
         }
     }
     fun screenConvert(detectionResult: MutableList<DetectionResult>, width: Int, height: Int): MutableList<DetectionResult> {
-        // 获取屏幕实际宽高
+        // 获取屏幕实际宽高'
+        Log.d("Annotation", "raw result: " + detectionResult)
         val screenWidth = resources.displayMetrics.widthPixels.toFloat()
         val screenHeight = resources.displayMetrics.heightPixels.toFloat()
 
@@ -113,6 +116,7 @@ class AnnotationView private constructor(context: Context) : View(context) {
 
     private fun drawLabel(canvas: Canvas, result: DetectionResult) {
         // 格式化置信度到3位小数
+        Log.d("Annotation", "conf:" + result.confidence + " label:" + result.cls)
         val formattedConfidence = "%.3f".format(result.confidence)
         val label = "${result.cls}: $formattedConfidence"
 
